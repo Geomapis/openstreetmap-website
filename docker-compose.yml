@@ -21,6 +21,7 @@ services:
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     depends_on:
       - db
+      - nominatim
 
   db:
     build:
@@ -33,7 +34,27 @@ services:
       POSTGRES_DB: openstreetmap
     volumes:
       # Mount the Postgres data directory so it persists between runs
-      - db-data:/var/lib/postgresql/data
+      - ${PWD}/docker/postgres/db-data:/var/lib/postgresql/data
+
+  nominatim:
+    container_name: nominatim
+    build:
+      context: ${PWD}/docker/nominatim/4.5
+      dockerfile: Dockerfile
+    image: mediagis/nominatim:4.5
+    ports:
+      - "8088:8080"
+      - "5433:5432"
+    environment:
+      PBF_PATH: /mnt/whole.osm.pbf
+      NOMINATIM_REPLICATION_URL: web:3000
+      POSTGRES_DB: nominatim
+    volumes:
+      - ${PWD}/docker/nominatim/db-data:/var/lib/postgresql/14/main
+      - type: bind
+        source: ${PWD}/docker/nominatim/pbf_files
+        target: /mnt
+    shm_size: 1gb
 
 volumes:
   web-tmp:

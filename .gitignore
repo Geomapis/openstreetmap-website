@@ -23,4 +23,7 @@ storage
 tmp
 
 # docker-compose database directory
-docker-db-data
+db-data
+
+# pbf files
+pbf_files/*
