@@ -1,0 +1,4 @@
+[submodule "nominatim"]
+	path = docker/nominatim
+	url = https://github.com/Geomapis/nominatim-docker.git
+	branch = osm_main
