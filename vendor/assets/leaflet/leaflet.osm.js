@@ -392,3 +392,10 @@ L.OSM.JSONParser = {
     return json.tags ?? {};
   }
 };
+
+L.OSM.Mapnik = L.OSM.TileLayer.extend({
+  options: {
+    url: 'http://localhost:8081/tiles/{z}/{x}/{y}.png',
+    maxZoom: 30
+  }
+});

@@ -2,3 +2,6 @@
 	path = docker/nominatim
 	url = https://github.com/Geomapis/nominatim-docker.git
 	branch = osm_main
+[submodule "docker/osm_tile_server"]
+	path = docker/osm_tile_server
+	url = https://github.com/Geomapis/osm_tile_server.git

@@ -1,0 +1,56 @@
+services:
+
+  web:
+    image: osm/web
+    stdin_open: true
+    tty: true
+    networks:
+      - osm_net
+
+  db:
+    image: osm/db
+    volumes:
+      # Mount the Postgres data directory so it persists between runs
+      - ${PWD}/docker/data/api_db/db-data:/var/lib/postgresql/data
+    networks:
+      - osm_net
+
+  nominatim:
+    container_name: nominatim
+    build:
+      context: docker/nominatim/4.5
+      dockerfile: Dockerfile
+    image: mediagis/nominatim:4.5
+    ports:
+      - "8088:8080"
+      - "5433:5432"
+    environment:
+      PBF_PATH: /mnt/merged.osm.pbf
+      NOMINATIM_REPLICATION_URL: web:3000
+      POSTGRES_DB: nominatim
+      # IMPORT_STYLE: nominatim_import_style_conf.lua
+    volumes:
+      - ${PWD}/docker/nominatim/db-data:/var/lib/postgresql/14/main
+      - type: bind
+        source: ${PWD}/docker/data/nominatim/pbf_data
+        target: /mnt
+    shm_size: 1gb
+    networks:
+      - osm_net
+
+  tile_server:
+    build:
+      context: .
+    image: tile_server
+    privileged: true
+    volumes:
+      - ${PWD}/openstreetmap-carto:/root/src/openstreetmap-carto
+      - ${PWD}/tiles:/var/www/html/tiles
+      - ${PWD}/db-data:/var/lib/postgresql/data
+    ports:
+      - "8081:80"
+    networks:
+      - osm_net
+
+networks:
+  osm_net:
