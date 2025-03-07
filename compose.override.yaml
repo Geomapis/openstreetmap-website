@@ -40,13 +40,13 @@ services:
 
   tile_server:
     build:
-      context: .
+      context: docker/osm_tile_server
     image: tile_server
     privileged: true
     volumes:
-      - ${PWD}/openstreetmap-carto:/root/src/openstreetmap-carto
-      - ${PWD}/tiles:/var/www/html/tiles
-      - ${PWD}/db-data:/var/lib/postgresql/data
+      - ${PWD}/docker/osm_tile_server/openstreetmap-carto:/root/src/openstreetmap-carto
+      - ${PWD}/docker/data/osm_tile_server/tiles:/var/www/html/tiles
+      - ${PWD}/docker/data/db-data:/var/lib/postgresql/data
     ports:
       - "8081:80"
     networks:

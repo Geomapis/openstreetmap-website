@@ -24,3 +24,4 @@ tmp
 
 # docker-compose database directory
 docker-db-data
+docker/data
