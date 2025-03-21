@@ -5,3 +5,6 @@
 [submodule "docker/osm_tile_server"]
 	path = docker/osm_tile_server
 	url = https://github.com/Geomapis/osm_tile_server.git
+[submodule "docker/overpass"]
+	path = docker/overpass
+	url = https://github.com/Geomapis/overpass.git

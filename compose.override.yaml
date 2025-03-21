@@ -10,7 +10,6 @@ services:
   db:
     image: osm/db
     volumes:
-      # Mount the Postgres data directory so it persists between runs
       - ${PWD}/docker/data/api_db/db-data:/var/lib/postgresql/data
     networks:
       - osm_net
@@ -25,18 +24,21 @@ services:
       - "8088:8080"
       - "5433:5432"
     environment:
-      PBF_PATH: /mnt/merged.osm.pbf
+      PBF_PATH: /mnt/aero.osm.pbf
       NOMINATIM_REPLICATION_URL: web:3000
       POSTGRES_DB: nominatim
-      # IMPORT_STYLE: nominatim_import_style_conf.lua
+      IMPORT_STYLE: /style.lua
     volumes:
-      - ${PWD}/docker/nominatim/db-data:/var/lib/postgresql/14/main
+      - ${PWD}/style.lua:/style.lua
+      - ${PWD}/docker/data/nominatim/db-data:/var/lib/postgresql/14/main
       - type: bind
         source: ${PWD}/docker/data/nominatim/pbf_data
         target: /mnt
     shm_size: 1gb
     networks:
       - osm_net
+    depends_on:
+      - web
 
   tile_server:
     build:
@@ -46,9 +48,18 @@ services:
     volumes:
       - ${PWD}/docker/osm_tile_server/openstreetmap-carto:/root/src/openstreetmap-carto
       - ${PWD}/docker/data/osm_tile_server/tiles:/var/www/html/tiles
-      - ${PWD}/docker/data/db-data:/var/lib/postgresql/data
+      - ${PWD}/docker/data/osm_tile_server/db-data:/var/lib/postgresql/data
     ports:
       - "8081:80"
+    networks:
+      - osm_net
+
+  overpass:
+    build:
+      context: docker/overpass
+    image: overpass
+    ports:
+      - 8080:80
     networks:
       - osm_net
 

@@ -14,10 +14,18 @@ L.OSM.TileLayer = L.TileLayer.extend({
 
 L.OSM.Mapnik = L.OSM.TileLayer.extend({
   options: {
-    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    maxZoom: 19
+    url: 'http://localhost:8081/tiles/{z}/{x}/{y}.png',
+    maxZoom: 23
   }
 });
+
+
+// L.OSM.Mapnik = L.OSM.TileLayer.extend({
+//   options: {
+//     url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+//     maxZoom: 19
+//   }
+// });
 
 L.OSM.CyclOSM = L.OSM.TileLayer.extend({
   options: {
@@ -392,10 +400,3 @@ L.OSM.JSONParser = {
     return json.tags ?? {};
   }
 };
-
-L.OSM.Mapnik = L.OSM.TileLayer.extend({
-  options: {
-    url: 'http://localhost:8081/tiles/{z}/{x}/{y}.png',
-    maxZoom: 30
-  }
-});
